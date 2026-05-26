@@ -168,53 +168,68 @@ END //
 
 DELIMITER ;
 
-INSERT INTO ROL (nombre_rol) VALUES 
-('Administrador'), 
-('Voluntario'), 
+-- =============================================
+-- DATOS DE PRUEBA
+-- =============================================
+
+INSERT INTO ROL (nombre_rol) VALUES
+('Administrador'),
+('Voluntario'),
 ('Organizacion');
 
-INSERT INTO CIUDAD (nombre_ciudad, departamento) VALUES 
+INSERT INTO CIUDAD (nombre_ciudad, departamento) VALUES
 ('Medellín', 'Antioquia'),
 ('Envigado', 'Antioquia'),
 ('Itagüí', 'Antioquia'),
 ('Bogotá', 'Cundinamarca');
 
-INSERT INTO CATEGORIA (nombre_categoria, descripcion) VALUES 
+INSERT INTO CATEGORIA (nombre_categoria, descripcion) VALUES
 ('Medio Ambiente', 'Reforestación, limpieza de ríos y cuidado animal.'),
 ('Educación', 'Tutorías a niños, alfabetización y talleres.'),
 ('Salud y Bienestar', 'Brigadas médicas, apoyo psicológico y donaciones.');
 
-INSERT INTO USUARIO (correo_electronico, contrasena, id_rol, id_ciudad) VALUES 
-('admin.central@voluntariado.org', 'admin1234', 1, 1),
-('tomas.voluntario@gmail.com', 'claveVoluntario1', 2, 1),
-('albert.voluntario@gmail.com', 'claveVoluntario2', 2, 2),
-('contacto@fundacionverde.org', 'orgPass2026', 3, 1),
-('usuario.problematico@gmail.com', 'spamPass99', 2, 3);
+-- Los INSERT en USUARIO disparan automáticamente el trigger tg_auditoria_nuevo_usuario
+-- id=1: admin | id=2: Tomás | id=3: org | id=4: Pedro | id=5..10: nuevos voluntarios
+INSERT INTO USUARIO (correo_electronico, contrasena, id_rol, id_ciudad) VALUES
+('admin.central@voluntariado.org',    'admin1234',   1, 1),
+('tomas.voluntario@gmail.com',        'Tomas@2026',  2, 1),
+('contacto@fundacionverde.org',       'OrgPass2026', 3, 1),
+('usuario.problematico@gmail.com',    'SpamPass99',  2, 3),
+('emmanuel.chaverra@gmail.com',       'Emm@2026',    2, 1),
+('frozono.castillo@gmail.com',        'Froz@2026',   2, 4),
+('jorge.espaguetti@gmail.com',        'Jorg@2026',   2, 3),
+('daniel.canino@gmail.com',           'Dani@2026',   2, 2),
+('freddy.maduro@gmail.com',           'Fred@2026',   2, 1),
+('yoao.espriella@gmail.com',          'Yoao@2026',   2, 4);
 
-INSERT INTO PERFIL_ADMIN (nombre, apellido, nivel_acceso, id_usuario) VALUES 
+INSERT INTO PERFIL_ADMIN (nombre, apellido, nivel_acceso, id_usuario) VALUES
 ('Carlos', 'Restrepo', 'SUPER_ADMIN', 1);
 
-INSERT INTO PERFIL_VOLUNTARIO (nombre, apellido, telefono, intereses, id_usuario) VALUES 
-('Tomás', 'Urrego', '3001234567', 'Desarrollo web, tecnología, ecología', 2),
-('Albert', 'Higuita', '3119876543', 'Logística, educación comunitaria', 3),
-('Pedro', 'Molesto', '3151112233', 'Ninguno en específico', 5);
+INSERT INTO PERFIL_VOLUNTARIO (nombre, apellido, telefono, intereses, id_usuario) VALUES
+('Tomás',     'Urrego',            '3001234567', 'Desarrollo web, tecnología, ecología',              2),
+('Pedro',     'Molesto',           '3151112233', 'Ninguno en específico',                             4),
+('Emmanuel',  'Chaverra Gepete',   '3201234560', 'Educación comunitaria, tecnología social',          5),
+('Frozono',   'Castillo Petro',    '3151234561', 'Medio ambiente, reforestación, ecología',           6),
+('Jorge',     'Espaguetti Escobar','3101234562', 'Logística, deporte comunitario, eventos',           7),
+('Daniel',    'Canino Kaelis',     '3181234563', 'Salud y bienestar, primeros auxilios',              8),
+('Freddy',    'Maduro Palacios',   '3121234564', 'Arte y cultura, talleres juveniles, fotografía',    9),
+('Yoao',      'Espriella Mosquera','3161234565', 'Comunicaciones, redes sociales, periodismo',       10);
 
-INSERT INTO PERFIL_ORGANIZACION (nombre_institucion, nit_registro, telefono, descripcion_org, estado_activo, estado_verificacion, id_usuario) VALUES 
-('Fundación Planeta Verde', '900123456-1', '6044445566', 'Institución dedicada a la siembra de árboles nativos en el Valle de Aburrá.', 1, 'VERIFICADA', 4);
+INSERT INTO PERFIL_ORGANIZACION (nombre_institucion, nit_registro, telefono, descripcion_org, estado_activo, estado_verificacion, id_usuario) VALUES
+('Fundación Planeta Verde', '900123456-1', '6044445566', 'Institución dedicada a la siembra de árboles nativos en el Valle de Aburrá.', 1, 'VERIFICADA', 3);
 
-INSERT INTO ACTIVIDAD (titulo, descripcion, fecha_evento, direccion, cupos_totales, cupos_disponibles, estado_actividad, id_organizacion, id_categoria, id_ciudad) VALUES 
-('Sembratón Arví 2026', 'Jornada de reforestación en el Parque Arví. Traer ropa cómoda.', '2026-06-15 08:00:00', 'Parque Arví, Piedras Blancas', 50, 48, 'PUBLICADA', 1, 1, 1);
+INSERT INTO ACTIVIDAD (titulo, descripcion, fecha_evento, direccion, cupos_totales, cupos_disponibles, estado_actividad, id_organizacion, id_categoria, id_ciudad) VALUES
+('Sembratón Arví 2026', 'Jornada de reforestación en el Parque Arví. Traer ropa cómoda.', '2026-06-15 08:00:00', 'Parque Arví, Piedras Blancas', 50, 49, 'PUBLICADA', 1, 1, 1);
 
-INSERT INTO INSCRIPCION (estado_solicitud, horas_acreditadas, id_voluntario, id_actividad) VALUES 
-('APROBADA', 4, 1, 1),
-('PENDIENTE', 0, 2, 1);
+INSERT INTO INSCRIPCION (estado_solicitud, horas_acreditadas, id_voluntario, id_actividad) VALUES
+('APROBADA', 4, 1, 1);
 
-INSERT INTO MENSAJE (contenido, id_usuario_remitente, id_usuario_destinatario, id_actividad) VALUES 
-('Hola, ¿a qué hora sale el bus para la sembratón?', 2, 4, 1),
-('Hola Tomás, salimos a las 7:00 AM desde la estación Caribe.', 4, 2, 1),
-('GANA DINERO FÁCIL ENTRANDO A ESTE ENLACE TRUCHO!!!', 5, 2, NULL);
+INSERT INTO MENSAJE (contenido, id_usuario_remitente, id_usuario_destinatario, id_actividad) VALUES
+('Hola, ¿a qué hora sale el bus para la sembratón?', 2, 3, 1),
+('Hola Tomás, salimos a las 7:00 AM desde la estación Caribe.', 3, 2, 1),
+('GANA DINERO FÁCIL ENTRANDO A ESTE ENLACE TRUCHO!!!', 4, 2, NULL);
 
-INSERT INTO REPORTE_USUARIO (motivo, id_usuario_reporta, id_usuario_reportado) VALUES 
-('El usuario está enviando enlaces extraños de publicidad por mensaje privado.', 2, 5);
+INSERT INTO REPORTE_USUARIO (motivo, id_usuario_reporta, id_usuario_reportado) VALUES
+('El usuario está enviando enlaces extraños de publicidad por mensaje privado.', 2, 4);
 
 SHOW TABLES;
